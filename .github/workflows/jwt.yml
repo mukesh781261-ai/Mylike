@@ -1,0 +1,33 @@
+name: JWT Token Generator (India Time GMT+5:30)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate-token:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate JWT
+        run: |
+          pip install pyjwt
+          python - <<EOF
+import jwt
+import datetime
+
+# Set India Time (GMT+5:30)
+ist_time = datetime.datetime.utcnow() + datetime.timedelta(hours=5, minutes=30)
+
+payload = {
+    "user": "ritesh",
+    "created_at": str(ist_time),
+    "exp": ist_time + datetime.timedelta(minutes=15)
+}
+
+secret_key = "mysecretkey"
+
+token = jwt.encode(payload, secret_key, algorithm="HS256")
+
+print("===== GENERATED JWT TOKEN =====")
+print(token)
+EOF
